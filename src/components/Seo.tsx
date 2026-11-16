@@ -1,0 +1,4 @@
+import {Helmet} from 'react-helmet-async';import {SITE_URL} from '../data';
+export default function Seo({title,desc,path}:{title:string;desc:string;path:string}){const url=SITE_URL+path;const t=`${title} | SYVANTA DIGITAL SYSTEMS`;
+return <Helmet><title>{t}</title><meta name="description" content={desc}/><link rel="canonical" href={url}/><meta property="og:title" content={t}/><meta property="og:description" content={desc}/><meta property="og:url" content={url}/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json">{JSON.stringify({'@context':'https://schema.org','@type':'Organization',name:'SYVANTA DIGITAL SYSTEMS',email:'syvanta.official@gmail.com',telephone:'+92 314 8313320',founder:{'@type':'Person',name:'Syed Sufyan Ahmed'}})}</script></Helmet>}

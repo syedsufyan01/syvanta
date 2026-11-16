@@ -1,0 +1,4 @@
+<FilesMatch "^(\.env.*|lib\.php|composer\..*|schema\.sql)$">
+Require all denied
+</FilesMatch>
+RedirectMatch 403 ^/.*/(vendor|storage)/

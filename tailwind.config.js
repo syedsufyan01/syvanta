@@ -1,0 +1,1 @@
+export default{darkMode:'class',content:['./index.html','./src/**/*.{ts,tsx}'],theme:{extend:{colors:{ink:'#080B14',panel:'#101827',brand:'#3B6CFF',violet2:'#8B5CF6',cyan2:'#22D3EE',muted:'var(--muted)',fg:'var(--fg)'},fontFamily:{sans:['Inter','system-ui','sans-serif'],display:['"Space Grotesk"','Inter','sans-serif']}}}}

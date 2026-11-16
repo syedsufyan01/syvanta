@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://syvanta.netlify.app/sitemap.xml

@@ -1,0 +1,6 @@
+.env
+vendor/
+
+!legacy-backend/storage/cv/.gitkeep
+node_modules/
+dist/

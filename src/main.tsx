@@ -1,0 +1,3 @@
+import React from 'react';import {createRoot} from 'react-dom/client';import {BrowserRouter} from 'react-router-dom';import {HelmetProvider} from 'react-helmet-async';
+import App from './App';import {ToastProvider,ErrorBoundary} from './components/ui';import './index.css';
+createRoot(document.getElementById('root')!).render(<HelmetProvider><BrowserRouter><ErrorBoundary fallback={<p style={{padding:'2rem',color:'#fff',background:'#080B14',minHeight:'100vh'}}>Something went wrong. Please refresh the page.</p>}><ToastProvider><App/></ToastProvider></ErrorBoundary></BrowserRouter></HelmetProvider>);

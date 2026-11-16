@@ -1,0 +1,28 @@
+import {Link} from 'react-router-dom';import {useState} from 'react';import {MessageCircle,ArrowRight,Check} from 'lucide-react';
+import Seo from '../components/Seo';import PageHero from '../components/PageHero';import {Field,FieldDef} from '../components/forms/kit';
+import {buildMessage,waLink} from '../lib/whatsapp';
+const TYPES=['Website','Application','E-commerce','Desktop Software','Business Solution','Other'];
+const FEATURES:Record<string,string[]>={Website:['Multi-page design','Contact form','Blog / news','Multi-language','SEO setup','Admin / CMS','WhatsApp integration','Analytics setup'],Application:['User accounts','Dashboard','Push notifications','Payments','API integration','Admin panel','Offline support'],'E-commerce':['Product catalogue','Cart & checkout','Payment gateway','Order management','Customer accounts','Inventory','Discount codes'],'Desktop Software':['Billing / invoicing','Inventory & stock','Reports & exports','User roles','Printing','Data backup'],'Business Solution':['Custom workflows','Reports & dashboards','User roles','Data import / export','Integrations','Notifications'],Other:[]};
+// Visitor's own budget brackets (not SYVANTA prices). Edit freely.
+const BUDGETS=['Under PKR 50,000','PKR 50,000 – 150,000','PKR 150,000 – 500,000','Above PKR 500,000','Not sure yet'];
+const TIMES=['As soon as possible','Within 1 month','1–3 months','Flexible'];
+const cards=(name:string,label:string,options:string[],optional=true):FieldDef=>({name,label,type:'cards',options,optional});
+export default function Planner(){
+  const [type,setType]=useState('');const [feat,setFeat]=useState<string[]>([]);const [budget,setBudget]=useState('');const [time,setTime]=useState('');
+  const score=feat.length+(type==='Application'||type==='Business Solution'||type==='Desktop Software'?2:0);const scope=!type?'—':score<=2?'Small':score<=5?'Medium':'Large';
+  const toggle=(x:string)=>setFeat(f=>f.includes(x)?f.filter(y=>y!==x):[...f,x]);
+  const text=buildMessage({intro:'I used the Project Planner on your website.',fields:[['Project type',type],['Features',feat.join(', ')],['Budget range',budget],['Timeline',time],['Indicative scope',scope]],closing:'Please contact me to discuss this plan.'});
+  const qs=new URLSearchParams();if(type)qs.set('type',type);if(budget)qs.set('budget',budget);if(time)qs.set('timeline',time);if(feat.length)qs.set('extra','Planned features: '+feat.join(', '));
+  return <><Seo title="Project Planner" desc="Shape your website or application idea and get an indicative planning summary." path="/planner"/>
+  <PageHero eyebrow="Project planner" title="Plan your project before you talk to us." sub="Choose a project type, features, budget range and timeline. You get an indicative summary to send us."/>
+  <section className="wrap section grid gap-12 lg:grid-cols-[1.3fr_.7fr]"><div className="space-y-12">
+    <div><p className="text-xs font-semibold uppercase tracking-widest text-cyan2">Step 1</p><Field f={cards('type','What are you building?',TYPES,false)} id="pl-type" value={type} onChange={v=>{setType(v);setFeat([])}}/></div>
+    <div><p className="text-xs font-semibold uppercase tracking-widest text-cyan2">Step 2</p><h2 className="mt-1 text-sm font-semibold">Required features <span className="font-normal text-muted">(optional)</span></h2>
+      {!type?<p className="mt-2 text-sm text-muted">Choose a project type first.</p>:FEATURES[type].length===0?<p className="mt-2 text-sm text-muted">Describe your idea in the quote form.</p>:<div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Features">{FEATURES[type].map(x=><button key={x} aria-pressed={feat.includes(x)} onClick={()=>toggle(x)} className={`flex min-h-[44px] items-center gap-2 rounded-xl border px-4 text-sm transition ${feat.includes(x)?'border-brand bg-brand/15 font-semibold':'hair hover:border-brand/60'}`}>{feat.includes(x)&&<Check size={14} className="text-brand"/>}{x}</button>)}</div>}</div>
+    <div><p className="text-xs font-semibold uppercase tracking-widest text-cyan2">Step 3</p><Field f={cards('budget','Approximate budget range',BUDGETS)} id="pl-budget" value={budget} onChange={setBudget}/></div>
+    <div><p className="text-xs font-semibold uppercase tracking-widest text-cyan2">Step 4</p><Field f={cards('time','Expected timeline',TIMES)} id="pl-time" value={time} onChange={setTime}/></div></div>
+    <aside className="lg:sticky lg:top-28 lg:self-start"><div className="rounded-3xl bg-ink p-6 text-white shadow-xl"><p className="text-xs font-semibold uppercase tracking-widest text-cyan2">Your planning summary</p>
+      <dl className="mt-4 space-y-3 text-sm">{([['Project type',type],['Features',feat.join(', ')],['Budget range',budget],['Timeline',time],['Indicative scope',scope]] as const).map(([k,v])=><div key={k}><dt className="text-white/50">{k}</dt><dd className="font-semibold">{v||'Not selected'}</dd></div>)}</dl>
+      <p className="mt-4 border-t border-white/15 pt-4 text-xs text-white/60">This is an indicative planning tool, not a quotation or a guaranteed price. Final scope and cost are agreed after we discuss your project.</p>
+      {!type&&<p className="mt-4 text-xs text-white/60">Choose a project type to enable these options.</p>}<div className="mt-5 flex flex-col gap-3"><Link to={`/quote?${qs.toString()}`} aria-disabled={!type} className={`btn ${type?'':'pointer-events-none opacity-50'}`}>Request a quote with this plan <ArrowRight size={14}/></Link><a href={type?waLink(text):undefined} target="_blank" rel="noopener noreferrer" aria-disabled={!type} className={`btn2 !border-white/30 !text-white ${type?'':'pointer-events-none opacity-50'}`}><MessageCircle size={14}/>Send plan on WhatsApp</a></div></div></aside></section></>;
+}
